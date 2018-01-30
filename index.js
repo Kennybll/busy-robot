@@ -44,7 +44,7 @@ const parseNextBlock = async () => {
         for (let op of tx.operations) {
           await vote(op);
           // slack(op);
-          discord(op);
+          //discord(op);
         }
       }
     }
