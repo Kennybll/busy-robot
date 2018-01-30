@@ -11,18 +11,15 @@ const username = process.env.STEEM_USERNAME;
 const postingWif = process.env.STEEM_POSTING_WIF;
 const delay = parseInt(process.env.STEEM_VOTE_DELAY || 43200);
 
-const MIN_VESTS = 100000000; // 10 Dolphins ~ 50 000 SP
-const MAX_VESTS = 500000000000; // 500 Whales ~ 250 000 000 SP
+const MIN_VESTS = 0; // 0 SP
+const MAX_VESTS = 100000000; // 10 Dolphins ~ 50 000 SP
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
   let votingPower = 0;
   try {
     const [account] = await fetch(url).then(res => res.json());
-    votingPower = account.followers_mvest >= MIN_VESTS ? parseFloat(10000 / MAX_VESTS * account.followers_mvest) : 0;
-    votingPower = votingPower > 10000 ? 10000 : parseFloat(votingPower);
-    votingPower = (votingPower > 0 && votingPower < 5) ? 5 : parseInt(votingPower);
-    // votingPower = votingPower > 5000 ? 5000 : votingPower;
+    votingPower = 1000;
   } catch (e) {
     console.log(e);
   }
@@ -40,12 +37,8 @@ const trigger = async (op) => {
 
     if (
       jsonMetadata
-      && jsonMetadata.app
-      && typeof jsonMetadata.app === 'string'
-      && jsonMetadata.app.includes('busy') // Must have 'busy/' as app
       && jsonMetadata.tags
-      && !jsonMetadata.tags.includes('test') // Must not include tag 'test'
-      && jsonMetadata.tags.includes('busy') // Must include tag 'busy'
+      && jsonMetadata.tags.includes('steemgo') // Must include tag 'busy'
     ) {
 
       const hasVote = await client.getAsync(`${op[1].author}:hasVote`);
