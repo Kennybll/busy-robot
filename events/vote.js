@@ -16,10 +16,14 @@ const MAX_VESTS = 100000000; // 10 Dolphins ~ 50 000 SP
 
 const calculateVotingPower = async (username) => {
   const url = `https://steemdb.com/api/accounts?account[]=${username}`;
+  const url2 = `https://steemdb.com/api/accounts?account[]=kennybll`;
   let votingPower = 0;
   try {
     const [account] = await fetch(url).then(res => res.json());
-    votingPower = 1000;
+    const votingStrength = await fetch(url2).then(res => res.json().voting_power);
+    if(votingStrenth > 8200) {
+       votingPower = 1000;
+    }
   } catch (e) {
     console.log(e);
   }
